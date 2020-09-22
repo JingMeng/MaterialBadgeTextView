@@ -21,6 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:visibility="gone"
         android:text="Hello World!" />
 
     <com.matrixxun.starry.badgetextview.MaterialBadgeTextView
@@ -29,6 +30,7 @@
         android:layout_marginTop="16dp"
         android:background="#EF4738"
         android:textSize="12sp"
+        android:visibility="gone"
         android:textColor="@android:color/white"
         android:text="0" />
 
@@ -49,6 +51,7 @@
         android:background="#427fed"
         android:textColor="@android:color/white"
         android:text="9"
+        android:visibility="gone"
         android:textSize="12sp"/>
 
     <com.matrixxun.starry.badgetextview.MaterialBadgeTextView
@@ -57,14 +60,15 @@
         android:layout_marginTop="16dp"
         android:background="#36b100"
         android:textColor="@android:color/white"
-        android:text="6123456789012"
-        android:textSize="25sp"/>
+        android:text="61"
+        android:textSize="50sp"/>
 
     <com.matrixxun.starry.badgetextview.MaterialBadgeTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="57"
+        android:visibility="gone"
         android:background="#FB8C00"
         android:textSize="14sp"/>
 
@@ -74,6 +78,7 @@
         android:id="@+id/test_text"
         android:layout_marginTop="16dp"
         android:text="99+"
+        android:visibility="gone"
         android:textColor="@android:color/white"
         android:background="#EF4738"
         android:textSize="16sp"/>
@@ -84,6 +89,7 @@
         android:layout_marginTop="16dp"
         android:text="MaterialBadgeTextView"
         android:background="#FB8C00"
+        android:visibility="gone"
         android:textSize="16sp"/>
 
     <com.matrixxun.starry.badgetextview.MaterialBadgeTextView
