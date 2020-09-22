@@ -38,11 +38,12 @@ public class MaterialBadgeTextView extends android.support.v7.widget.AppCompatTe
     private float borderAlpha;
     private int ctType;
 
-    private static final float SHADOW_RADIUS = 3.5f;
+
     private static final int FILL_SHADOW_COLOR = 0x55000000;
     private static final int KEY_SHADOW_COLOR = 0x55000000;
 
     private static final float X_OFFSET = 0f;
+    private static final float SHADOW_RADIUS = 3.5f;
     private static final float Y_OFFSET = 1.75f;
 
 
@@ -71,6 +72,7 @@ public class MaterialBadgeTextView extends android.support.v7.widget.AppCompatTe
 
     private void init(Context context, AttributeSet attrs) {
         setGravity(Gravity.CENTER);
+
         density = getContext().getResources().getDisplayMetrics().density;
         //这是阴影相关的操作
         mShadowRadius = (int) (density * SHADOW_RADIUS);
@@ -109,6 +111,8 @@ public class MaterialBadgeTextView extends android.support.v7.widget.AppCompatTe
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        //这个地方也没有任何问题，大小是从系统得到的
+        // FIXME: 2020/9/22  问题是这个大小是如何设置上的
         refreshBackgroundDrawable(w, h);
     }
 
@@ -122,8 +126,10 @@ public class MaterialBadgeTextView extends android.support.v7.widget.AppCompatTe
         }
         /**第一种背景是一个正圆形, 当文本为个位数字时 */
         if (text.length() == 1) {
+            //获取半径
             int max = Math.max(targetWidth, targetHeight);
             ShapeDrawable circle;
+            //实际半径需要减掉阴影的影响
             final int diameter = max - (2 * mShadowRadius);
             //这个代码和xml里面的是多么的相似啊
             OvalShape oval = new OvalShadow(mShadowRadius, diameter);
@@ -239,27 +245,31 @@ public class MaterialBadgeTextView extends android.support.v7.widget.AppCompatTe
     }
 
     private class OvalShadow extends OvalShape {
-        private RadialGradient mRadialGradient;
-        private Paint mShadowPaint;
+//        private RadialGradient mRadialGradient;
+//        private Paint mShadowPaint;
+        /**
+         * 分析这个得到的数据是直径
+         */
         private int mCircleDiameter;
 
         public OvalShadow(int shadowRadius, int circleDiameter) {
             super();
-            mShadowPaint = new Paint();
-            mShadowRadius = shadowRadius;
             mCircleDiameter = circleDiameter;
-            mRadialGradient = new RadialGradient(mCircleDiameter / 2, mCircleDiameter / 2,
-                    mShadowRadius, new int[]{
-                    FILL_SHADOW_COLOR, Color.TRANSPARENT
-            }, null, Shader.TileMode.CLAMP);
-            mShadowPaint.setShader(mRadialGradient);
+//            mShadowPaint = new Paint();
+//            mShadowRadius = shadowRadius;
+//
+//            mRadialGradient = new RadialGradient(mCircleDiameter / 2, mCircleDiameter / 2,
+//                    mShadowRadius, new int[]{
+//                    FILL_SHADOW_COLOR, Color.TRANSPARENT
+//            }, null, Shader.TileMode.CLAMP);
+//            mShadowPaint.setShader(mRadialGradient);
         }
 
         @Override
         public void draw(Canvas canvas, Paint paint) {
             final int viewWidth = MaterialBadgeTextView.this.getWidth();
             final int viewHeight = MaterialBadgeTextView.this.getHeight();
-            canvas.drawCircle(viewWidth / 2, viewHeight / 2, (mCircleDiameter / 2 + mShadowRadius), mShadowPaint);
+//            canvas.drawCircle(viewWidth / 2, viewHeight / 2, (mCircleDiameter / 2 + mShadowRadius), mShadowPaint);
             canvas.drawCircle(viewWidth / 2, viewHeight / 2, (mCircleDiameter / 2), paint);
         }
     }
