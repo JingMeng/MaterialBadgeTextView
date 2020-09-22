@@ -16,6 +16,7 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,20 +43,21 @@ public class MaterialBadgeTextView extends android.support.v7.widget.AppCompatTe
     private static final int FILL_SHADOW_COLOR = 0x55000000;
     private static final int KEY_SHADOW_COLOR = 0x55000000;
 
-    private static final float X_OFFSET = 0f;
+    //    private static final float X_OFFSET = 0f;
     private static final float SHADOW_RADIUS = 3.5f;
-    private static final float Y_OFFSET = 1.75f;
+//    private static final float Y_OFFSET = 1.75f;
 
 
     private float density;
     private int mShadowRadius;
-    private int shadowYOffset;
-    private int shadowXOffset;
+//    private int shadowYOffset;
+//    private int shadowXOffset;
 
     private int basePadding;
     private int diffWH;
 
     private boolean isHighLightMode;
+    private String TAG = "MaterialBadgeTextView";
 
     public MaterialBadgeTextView(final Context context) {
         this(context, null);
@@ -74,17 +76,37 @@ public class MaterialBadgeTextView extends android.support.v7.widget.AppCompatTe
         setGravity(Gravity.CENTER);
 
         density = getContext().getResources().getDisplayMetrics().density;
-        //这是阴影相关的操作
+        //这是阴影相关的操作  px转dp的操作
+        //用的测试机density 为2
         mShadowRadius = (int) (density * SHADOW_RADIUS);
-        shadowYOffset = (int) (density * Y_OFFSET);
-        shadowXOffset = (int) (density * X_OFFSET);
-        //
+//        shadowYOffset = (int) (density * Y_OFFSET);
+//        shadowXOffset = (int) (density * X_OFFSET);
+
+        ///=========================从下面的参数开始思考
+//        mShadowRadius = 0;
         basePadding = (mShadowRadius * 2);
         float textHeight = getTextSize();
         float textWidth = textHeight / 4;
         diffWH = (int) (Math.abs(textHeight - textWidth) / 2);
         int horizontalPadding = basePadding + diffWH;
+//        setPadding(horizontalPadding, horizontalPadding, horizontalPadding, horizontalPadding);
+
+//        24=============14
+//        23=============14
+//        51=============14
+//        23=============14
+//        32=============14
+//        24=============14
+//        26=============14
+//        26=============14
+//        24=============14
+//        21=============14
+//        21=============14
+        Log.i(TAG, horizontalPadding + "=============" + basePadding);
+        //为什么加一个padding反而变得圆形了
         setPadding(horizontalPadding, basePadding, horizontalPadding, basePadding);
+        ///=========================从此处结束
+
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MaterialBadgeTextView);
         backgroundColor = typedArray.getColor(R.styleable.MaterialBadgeTextView_android_background, Color.WHITE);
         borderColor = typedArray.getColor(R.styleable.MaterialBadgeTextView_mbtv_border_color, Color.TRANSPARENT);
@@ -113,6 +135,8 @@ public class MaterialBadgeTextView extends android.support.v7.widget.AppCompatTe
         super.onSizeChanged(w, h, oldw, oldh);
         //这个地方也没有任何问题，大小是从系统得到的
         // FIXME: 2020/9/22  问题是这个大小是如何设置上的
+//        w>=h 是普遍数据
+        Log.i(TAG, w + "=========onSizeChanged==============" + h);
         refreshBackgroundDrawable(w, h);
     }
 
@@ -126,7 +150,7 @@ public class MaterialBadgeTextView extends android.support.v7.widget.AppCompatTe
         }
         /**第一种背景是一个正圆形, 当文本为个位数字时 */
         if (text.length() == 1) {
-            //获取半径
+            //获取半径 fixme 获取最大的，岂不是越界了？？？？
             int max = Math.max(targetWidth, targetHeight);
             ShapeDrawable circle;
             //实际半径需要减掉阴影的影响
@@ -135,7 +159,8 @@ public class MaterialBadgeTextView extends android.support.v7.widget.AppCompatTe
             OvalShape oval = new OvalShadow(mShadowRadius, diameter);
             circle = new ShapeDrawable(oval);
             ViewCompat.setLayerType(this, ViewCompat.LAYER_TYPE_SOFTWARE, circle.getPaint());
-            circle.getPaint().setShadowLayer(mShadowRadius, shadowXOffset, shadowYOffset, KEY_SHADOW_COLOR);
+//            circle.getPaint().setShadowLayer(mShadowRadius, shadowXOffset, shadowYOffset, KEY_SHADOW_COLOR);
+            circle.getPaint().setShadowLayer(mShadowRadius, 0, 0, KEY_SHADOW_COLOR);
             circle.getPaint().setColor(backgroundColor);
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
                 setBackgroundDrawable(circle);
@@ -146,7 +171,8 @@ public class MaterialBadgeTextView extends android.support.v7.widget.AppCompatTe
             /**第二种背景是上下两边为直线的椭圆, 当文本长度大于1时 */
             SemiCircleRectDrawable sr = new SemiCircleRectDrawable();
             ViewCompat.setLayerType(this, ViewCompat.LAYER_TYPE_SOFTWARE, sr.getPaint());
-            sr.getPaint().setShadowLayer(mShadowRadius, shadowXOffset, shadowYOffset, KEY_SHADOW_COLOR);
+            sr.getPaint().setShadowLayer(mShadowRadius, 0, 0, KEY_SHADOW_COLOR);
+//            sr.getPaint().setShadowLayer(mShadowRadius, shadowXOffset, shadowYOffset, KEY_SHADOW_COLOR);
             sr.getPaint().setColor(backgroundColor);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 setBackground(sr);
