@@ -104,6 +104,8 @@ public class MaterialBadgeTextView extends android.support.v7.widget.AppCompatTe
 //        21=============14
         Log.i(TAG, horizontalPadding + "=============" + basePadding);
         //为什么加一个padding反而变得圆形了
+        //直径为最大的宽高中的一个，必然有一部分是绘制不出来的，
+        //进而企图使用padding来解决那一部分，缩小整个圆的绘制
         setPadding(horizontalPadding, basePadding, horizontalPadding, basePadding);
         ///=========================从此处结束
 
